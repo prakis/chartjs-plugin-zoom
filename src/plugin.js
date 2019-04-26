@@ -1,17 +1,3 @@
-   
-		   
-					  
-					  
-				 
-  
-									   
-								 
-																		
-   
-							 
-																																   
-																						
-																				   
 'use strict';
 
 import Chart from 'chart.js';
@@ -676,5 +662,3 @@ var zoomPlugin = {
 Chart.plugins.register(zoomPlugin);
 
 export default zoomPlugin;
-
-	
