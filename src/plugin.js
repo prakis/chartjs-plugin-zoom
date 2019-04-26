@@ -1,3 +1,17 @@
+   
+		   
+					  
+					  
+				 
+  
+									   
+								 
+																		
+   
+							 
+																																   
+																						
+																				   
 'use strict';
 
 import Chart from 'chart.js';
@@ -160,7 +174,8 @@ function zoomScale(scale, zoom, center, zoomOptions) {
  * @param {{x: number, y: number}} focalPoint The x and y coordinates of zoom focal point. The point which doesn't change while zooming. E.g. the location of the mouse cursor when "drag: false"
  * @param {string} whichAxes `xy`, 'x', or 'y'
  */
-function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes) {
+function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes, startX, startY, dragDistanceX, dragDistanceY) {
+
 	var ca = chart.chartArea;
 	if (!focalPoint) {
 		focalPoint = {
@@ -200,7 +215,7 @@ function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes) {
 		chart.update(0);
 
 		if (typeof zoomOptions.onZoom === 'function') {
-			zoomOptions.onZoom({chart: chart});
+			zoomOptions.onZoom({chart: chart}, startX, startY, dragDistanceX, dragDistanceY);
 		}
 	}
 }
@@ -454,7 +469,7 @@ var zoomPlugin = {
 				doZoom(chartInstance, zoomX, zoomY, {
 					x: (startX - chartArea.left) / (1 - dragDistanceX / chartDistanceX) + chartArea.left,
 					y: (startY - chartArea.top) / (1 - dragDistanceY / chartDistanceY) + chartArea.top
-				});
+				}, null, startX, startY, dragDistanceX, dragDistanceY);
 			}
 		};
 		node.ownerDocument.addEventListener('mouseup', chartInstance.$zoom._mouseUpHandler);
@@ -475,12 +490,12 @@ var zoomPlugin = {
 				if (event.deltaY >= 0) {
 					speedPercent = -speedPercent;
 				}
-				doZoom(chartInstance, 1 + speedPercent, 1 + speedPercent, center);
+				doZoom(chartInstance, 1 + speedPercent, 1 + speedPercent, center, null, event.clientX, event.clientY, rect.width, rect.height);
 
 				// Prevent the event from triggering the default behavior (eg. Content scrolling).
-				if (event.cancelable) {
-					event.preventDefault();
-				}
+						   
+				event.preventDefault();
+	 
 			}
 		};
 
@@ -659,4 +674,7 @@ var zoomPlugin = {
 };
 
 Chart.plugins.register(zoomPlugin);
+
 export default zoomPlugin;
+
+	
