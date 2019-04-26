@@ -2,6 +2,20 @@
 
 A zoom and pan plugin for Chart.js. Currently requires Chart.js >= 2.6.0
 
+This is a fork which adds extra return values on zoom.
+Example:
+
+```javascript
+onZoom: function({chart}, startX, startY, dragDistanceX, dragDistanceY) { 
+
+	 var xGap = Math.round(chart.chartArea.left);
+	 var yGap = Math.round(chart.chartArea.top);
+	 var x1 = startX -xGap;
+	 var y1 = startY - yGap;
+	 
+}
+```
+
 Panning can be done via the mouse or with a finger.
 Zooming is done via the mouse wheel or via a pinch gesture. [Hammer.js](https://hammerjs.github.io/) is used for gesture recognition.
 
