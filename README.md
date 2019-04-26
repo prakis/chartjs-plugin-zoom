@@ -10,8 +10,10 @@ onZoom: function({chart}, startX, startY, dragDistanceX, dragDistanceY) {
 
 	 var xGap = Math.round(chart.chartArea.left);
 	 var yGap = Math.round(chart.chartArea.top);
-	 var x1 = startX -xGap;
+	 var x1 = startX - xGap;
 	 var y1 = startY - yGap;
+	 var x2 = x1 + dragDistanceX;
+	 var y2 = y2 + dragDistanceY;
 	 
 }
 ```
