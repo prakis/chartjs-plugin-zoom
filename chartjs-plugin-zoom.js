@@ -625,8 +625,10 @@ var zoomPlugin = {
 			var rectHeight = endY - startY;
 			var dragOptions = chartInstance.$zoom._options.zoom.drag;
 
-			ctx.fillStyle = dragOptions.backgroundColor || 'rgba(225,225,225,0.3)';
-			ctx.fillRect(startX, startY, rectWidth, rectHeight);
+			if(!chartInstance.hideZoomRect){
+				ctx.fillStyle = dragOptions.backgroundColor || 'rgba(225,225,225,0.3)';
+				ctx.fillRect(startX, startY, rectWidth, rectHeight);
+			}
 
 			if (dragOptions.borderWidth > 0) {
 				ctx.lineWidth = dragOptions.borderWidth;
