@@ -2,21 +2,26 @@
 
 A zoom and pan plugin for Chart.js. Currently requires Chart.js >= 2.6.0
 
-This is a fork which adds extra return values on zoom.
+This is a 'chartjs-plugin-zoom' fork which adds extra zoom co-ordinates and plot margin values for onZoom callback function.
 Example:
 
 ```javascript
-onZoom: function({chart}, startX, startY, dragDistanceX, dragDistanceY) { 
+onZoom: function({chart}, actualStartPoint, actualEndPoint, margins) {
 
-	 var xGap = Math.round(chart.chartArea.left);
-	 var yGap = Math.round(chart.chartArea.top);
-	 var x1 = startX - xGap;
-	 var y1 = startY - yGap;
-	 var x2 = x1 + dragDistanceX;
-	 var y2 = y2 + dragDistanceY;
-	 
+			var zoomStartX = Math.round(actualStartPoint.x);
+			var zoomStartY = Math.round(actualStartPoint.y);
+
+			var zoomEndX = Math.round(actualEndPoint.x);
+			var zoomEndY = Math.round(actualEndPoint.y);
+
+			var plotLeftMargin = Math.round(margins.left);
+			var plotTopMargin = Math.round(margins.top);
 }
 ```
+
+
+
+
 
 Panning can be done via the mouse or with a finger.
 Zooming is done via the mouse wheel or via a pinch gesture. [Hammer.js](https://hammerjs.github.io/) is used for gesture recognition.
@@ -101,7 +106,17 @@ plugins: {
 
 			// Function called once zooming is completed
 			// Useful for dynamic data loading
-			onZoom: function({chart}) { console.log(`I was zoomed!!!`); }
+			onZoom: function({chart}, actualStartPoint, actualEndPoint, margins) {
+
+						var zoomStartX = Math.round(actualStartPoint.x);
+						var zoomStartY = Math.round(actualStartPoint.y);
+
+						var zoomEndX = Math.round(actualEndPoint.x);
+						var zoomEndY = Math.round(actualEndPoint.y);
+
+						var plotLeftMargin = Math.round(margins.left);
+						var plotTopMargin = Math.round(margins.top);
+			}			
 		}
 	}
 }
