@@ -173,8 +173,10 @@ function zoomScale(scale, zoom, center, zoomOptions) {
  * @param {number} percentZoomY The zoom percentage in the y direction
  * @param {{x: number, y: number}} focalPoint The x and y coordinates of zoom focal point. The point which doesn't change while zooming. E.g. the location of the mouse cursor when "drag: false"
  * @param {string} whichAxes `xy`, 'x', or 'y'
+ * @param {x:number, y:number} actual zoom start point
+ * @param {x:number, y:number} actual zoom end point
  */
-function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes, startX, startY, dragDistanceX, dragDistanceY) {
+function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes, actualStartPoint, actualEndPoint, margins) {
 
 	var ca = chart.chartArea;
 	if (!focalPoint) {
@@ -215,7 +217,7 @@ function doZoom(chart, percentZoomX, percentZoomY, focalPoint, whichAxes, startX
 		chart.update(0);
 
 		if (typeof zoomOptions.onZoom === 'function') {
-			zoomOptions.onZoom({chart: chart}, startX, startY, dragDistanceX, dragDistanceY);
+			zoomOptions.onZoom({chart: chart}, actualStartPoint, actualEndPoint, margins);
 		}
 	}
 }
@@ -466,10 +468,14 @@ var zoomPlugin = {
 			chartInstance.$zoom._dragZoomEnd = null;
 
 			if (dragDistanceX > 0 || dragDistanceY > 0) {
+				var actualStartPoint = { x: beginPoint.clientX - xAxis.left, y: beginPoint.clientY - yAxis.top };
+				var actualEndPoint = { x: event.clientX - xAxis.left, y: event.clientY - yAxis.top };
+				var margins = { left:xAxis.left, top:yAxis.top };
 				doZoom(chartInstance, zoomX, zoomY, {
 					x: (startX - chartArea.left) / (1 - dragDistanceX / chartDistanceX) + chartArea.left,
 					y: (startY - chartArea.top) / (1 - dragDistanceY / chartDistanceY) + chartArea.top
-				}, null, startX, startY, dragDistanceX, dragDistanceY);
+				//}, null, startX, startY, dragDistanceX, dragDistanceY);
+				}, null, actualStartPoint, actualEndPoint, margins);
 			}
 		};
 		node.ownerDocument.addEventListener('mouseup', chartInstance.$zoom._mouseUpHandler);
@@ -490,7 +496,10 @@ var zoomPlugin = {
 				if (event.deltaY >= 0) {
 					speedPercent = -speedPercent;
 				}
-				doZoom(chartInstance, 1 + speedPercent, 1 + speedPercent, center, null, event.clientX, event.clientY, rect.width, rect.height);
+				var actualStartPoint =  {x: event.clientX, y:event.clientY };
+				var actualEndPoint =  {x: (event.clientX + rect.width), y: (event.clientX + rect.height) };
+				var margins = {left:0, top:0};
+				doZoom(chartInstance, 1 + speedPercent, 1 + speedPercent, center, null, actualStartPoint, actualEndPoint, margins);
 
 				// Prevent the event from triggering the default behavior (eg. Content scrolling).
 						   
@@ -535,7 +544,10 @@ var zoomPlugin = {
 					xy = 'y'; // y axis
 				}
 
-				doZoom(chartInstance, diff, diff, center, xy);
+				var actualStartPoint = { x: e.pointers[0].clientX, y: e.pointers[0].clientY };
+				var actualEndPoint = { x:e.pointers[1].clientX, y:e.pointers[1].clientY };
+				var margins = {left:0, top:0};
+				doZoom(chartInstance, diff, diff, center, xy, actualStartPoint, actualEndPoint, margins);
 
 				// Keep track of overall scale
 				currentPinchScaling = e.scale;
