@@ -276,7 +276,7 @@ function panScale(scale, delta, panOptions) {
 	}
 }
 
-function doPan(chartInstance, deltaX, deltaY, startX, endX, startY, endY) {
+function doPan(chartInstance, deltaX, deltaY, startX, startY, endX, endY) {
 	storeOriginalOptions(chartInstance);
 	var panOptions = chartInstance.$zoom._options.pan;
 	if (panOptions.enabled) {
@@ -295,7 +295,7 @@ function doPan(chartInstance, deltaX, deltaY, startX, endX, startY, endY) {
 		chartInstance.update(0);
 
 		if (typeof panOptions.onPan === 'function') {
-			panOptions.onPan({chart: chartInstance}, deltaX, deltaY, startX, endX, startY, endY);
+			panOptions.onPan({chart: chartInstance}, deltaX, deltaY, startX, startY, endX, endY);
 		}
 	}
 }
@@ -559,7 +559,7 @@ var zoomPlugin = {
 					var deltaY = e.deltaY - currentDeltaY;
 					currentDeltaX = e.deltaX;
 					currentDeltaY = e.deltaY;
-					doPan(chartInstance, deltaX, deltaY, startX, endX, startY, endY);
+					doPan(chartInstance, deltaX, deltaY, e.deltaX,  e.deltaY, currentDeltaX, currentDeltaY);
 				}
 			};
 
