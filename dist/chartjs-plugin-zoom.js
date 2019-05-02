@@ -468,8 +468,12 @@ var zoomPlugin = {
 			chartInstance.$zoom._dragZoomEnd = null;
 
 			if (dragDistanceX > 0 || dragDistanceY > 0) {
-				var actualStartPoint = { x: beginPoint.clientX - xAxis.left, y: beginPoint.clientY - yAxis.top };
-				var actualEndPoint = { x: event.clientX - xAxis.left, y: event.clientY - yAxis.top };
+				var canvasBounds = event.target.getBoundingClientRect();
+				var canvasOffsetX = event.clientX - canvasBounds.left;
+				var canvasOffsetY = event.clientY - canvasBounds.top;
+				
+				var actualStartPoint = { x: beginPoint.clientX - (canvasBounds.left + xAxis.left) , y: beginPoint.clientY - (canvasBounds.top + yAxis.top) };
+				var actualEndPoint = { x: event.clientX - (canvasBounds.left + xAxis.left), y: event.clientY - (canvasBounds.top + yAxis.top) };				
 				var margins = { left:xAxis.left, top:yAxis.top };
 				doZoom(chartInstance, zoomX, zoomY, {
 					x: (startX - chartArea.left) / (1 - dragDistanceX / chartDistanceX) + chartArea.left,
@@ -496,8 +500,8 @@ var zoomPlugin = {
 				if (event.deltaY >= 0) {
 					speedPercent = -speedPercent;
 				}
-				var actualStartPoint =  {x: event.clientX, y:event.clientY };
-				var actualEndPoint =  {x: (event.clientX + rect.width), y: (event.clientX + rect.height) };
+				var actualStartPoint =  {x: event.clientX - offsetX, y:event.clientY - offsetY};
+				var actualEndPoint =  {x: (event.clientX + rect.width - offsetX), y: (event.clientX + rect.height - offsetY) };
 				var margins = {left:0, top:0};
 				doZoom(chartInstance, 1 + speedPercent, 1 + speedPercent, center, null, actualStartPoint, actualEndPoint, margins);
 
