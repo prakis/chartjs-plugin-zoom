@@ -627,7 +627,7 @@ var zoomPlugin = {
 			var rectHeight = endY - startY;
 			var dragOptions = chartInstance.$zoom._options.zoom.drag;
 
-			if(!chartInstance.hideZoomRect){
+			if(!chartInstance.options.hideZoomRectangle){
 				ctx.fillStyle = dragOptions.backgroundColor || 'rgba(225,225,225,0.3)';
 				ctx.fillRect(startX, startY, rectWidth, rectHeight);
 			}
